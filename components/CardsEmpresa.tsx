@@ -1,18 +1,15 @@
 import React from 'react'
 import { Button } from './ui/button'
 import { redirect } from 'next/navigation'
-type Empresa={
-  id:string,
-  nome:string,
-  cnpj:string
-}
+import { Empresa } from '@/src/types/types'
+
 type Props={
     empresa: Empresa
 }
 
 const CardEmpresa = (props:Props) => {
   return (
-    <div className="w-full h-30 border-1 rounded-2xl p-4 flex transition-all duration-300 ease-in-out hover:bg-gray-100 " key={props.empresa.id}>
+    <div onClick={()=>redirect(`/empresas/empresa/${props.empresa.id}/dashboard`)} className=" cursor-pointer w-full h-30 border-1 rounded-2xl p-4 flex transition-all duration-300 ease-in-out hover:bg-gray-100 " key={props.empresa.id}>
               <div className="w-8/12">
                 <h2 className="text-sm font-medium text-gray-700">{props.empresa.nome}</h2>
               <p>Cnpj: {props.empresa.cnpj}</p>

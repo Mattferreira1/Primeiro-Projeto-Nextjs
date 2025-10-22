@@ -44,7 +44,7 @@ const Login = () => {
           password:`${currentUser.senha}`
       }
     ))
-      redirect("/empresas")
+      redirect(`/empresas`)
     }
   }
 

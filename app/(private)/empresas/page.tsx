@@ -4,48 +4,30 @@ import CardEmpresa from "@/components/CardsEmpresa";
 import MainContainer from "@/components/MainContainer";
 import { Button } from "@/components/ui/button"
 import { db } from "@/src/services/db";
+import { Empresa } from "@/src/types/types";
 import { collection, getDocs } from "firebase/firestore";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
-type Empresa={
-  id:string,
-  nome:string,
-  cnpj:string
-}
+
 
 const Home = () => {
   const [empresas, setEmpresas]= useState<Empresa[]>([])
 
-  const listEmpresasTeste:Empresa[] = [
-    {
-      id:"1",
-      nome:"teste",
-      cnpj:"999"
-    },
-    {
-      id:"2",
-      nome:"teste",
-      cnpj:"999"
-    },
-    {
-      id:"3",
-      nome:"teste",
-      cnpj:"999"
-    },
-  ]
+ const user= useSelector((state:any)=> state.user.user)
 
-  // async function getDocsEmpresas(){
-  //  const query= collection(db,"users","PAg3XCrGMytMc7ZjoHkG" ,"empresas")
-  //  const data = await getDocs(query)
-  //  const listaDeEmpresas = data.docs.map((doc)=>({...doc.data(), id:`${doc.id}`})) as Empresa[]
-  //  setEmpresas(listaDeEmpresas)
+  async function getDocsEmpresas(){
+   const query= collection(db,"users",`${user.id}` ,"empresas")
+   const data = await getDocs(query)
+   const listaDeEmpresas = data.docs.map((doc)=>({...doc.data(), id:`${doc.id}`})) as Empresa[]
+   setEmpresas(listaDeEmpresas)
    
-  // }
+  }
   //
   useEffect(()=>{
-    // getDocsEmpresas()
-    setEmpresas(listEmpresasTeste)
+    getDocsEmpresas()
+    
 
   },[])
   return (
