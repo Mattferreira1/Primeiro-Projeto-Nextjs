@@ -32,10 +32,14 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
-        <ReduxProvider>
-          {children}
-        </ReduxProvider>
+        
+          <ReduxProvider>
+            <main>
+              {children}
+            </main>
+          </ReduxProvider>
 
+        
       </body>
     </html>
   );

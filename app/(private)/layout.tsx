@@ -1,13 +1,7 @@
 "use client"
-import Header from "@/components/Header";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+import Sidebar from "@/components/SideBar";
 import authUser from "@/src/hooks/userAuth";
-import Link from "next/link";
+
 
 export default function PublicLayout({
   children,
@@ -18,9 +12,13 @@ export default function PublicLayout({
   authUser()
   
   return (
-    <div className="relative">
-      <Header/>
-      {children}
+    <div className="grid grid-cols-[minmax(7.5rem,_17.5rem)_1fr]">
+        <Sidebar/>
+        {/* <Header/> */}
+      <main className=" h-screen overflow-y-scroll">
+        {children}
+      </main>
     </div>
   );
 }
+

@@ -1,42 +1,51 @@
 'use client'
-import { auth, db } from "@/src/services/db";
+import {  db } from "@/src/services/db";
 import { Button } from "@/components/ui/button"
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import {  collectionGroup, getDoc, getDocs, query, where } from "firebase/firestore";
+import { ChangeEvent, useState } from "react";
 import { redirect } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { userLogin } from "@/redux/User/userSlice";
+import { CurrentUser } from "@/src/types/types";
+import * as InputButton from "@/components/InputButton/Index"
+import { AtSign, Eye, EyeOff, Shield } from "lucide-react";
 
-type CurrentUser={
-  id:string,
-  email:string,
-  senha:string
-}
+
+
+
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string| null>(null);
 
   const dispatch = useDispatch();
   async function autenticate(e: any) {
     e.preventDefault();
+
+    if(!email && !password){
+      setError("Email ou senha faltando.")
+      return
+    }
+    console.log(123);
+    
     const q = query(
-      collection(db, "users"),
+      collectionGroup(db, "Funcionarios"),
       where("email", "==", email),
       where("senha", "==", password)
     );
     const snapshot = await getDocs(q);
-
+    console.log(snapshot);
     if (snapshot.empty) {
-      setError(true)
+      setError("Email ou senha incorretos, tente novamente.")
       return
     } else {
-      setError(false)
+      setError(null)
       const currentUser:CurrentUser={...snapshot.docs[0].data(),id:snapshot.docs[0].id } as CurrentUser
-      
+      const funcionarioDoc = snapshot.docs[0];
+      const  empresaRef = funcionarioDoc.ref.parent.parent; 
+      const empresaSnap = await getDoc(empresaRef);
       dispatch(userLogin(
         {
           id: `${currentUser.id}`,
@@ -44,18 +53,18 @@ const Login = () => {
           password:`${currentUser.senha}`
       }
     ))
-      redirect(`/empresas`)
+    // const queryUser= query(collection(db, "empresas"),where("email"))
+    // const snapshot= getDocs(queryUser)
+      redirect(`/empresa/${empresaSnap.id}`)
     }
   }
-
+  
   return (
     <main className="w-full h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-md p-8 bg-white border border-gray-200 shadow-sm rounded-2xl flex flex-col">
         <h1 className="text-2xl font-semibold text-gray-900 text-center mb-6">
           Login 
         </h1>
-        
-            
 
         <form onSubmit={autenticate} className="flex flex-col gap-4">
           {/* Email */}
@@ -66,13 +75,14 @@ const Login = () => {
             >
               E-mail
             </label>
-            <Input
-              type="email"
-              id="email"
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
-              placeholder="Digite seu e-mail"
-            />
+            
+            <InputButton.Root
+              onChange={(e:ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            >
+              <InputButton.Prefix icon={AtSign}/>
+              <InputButton.Control name="email" id="email" placeholder="Digite seu email" type="email"/>
+            </InputButton.Root>
+
           </div>
 
           {/* Senha */}
@@ -84,25 +94,28 @@ const Login = () => {
               Senha
             </label>
             <div className="relative">
-              <Input
-                type={showPass ? "text" : "password"}
-                id="password"
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-black transition"
-                placeholder="Digite sua senha"
-              />
+               <InputButton.Root
+              onChange={(e:ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+            >
+              <InputButton.Prefix icon={Shield}/>
+              <InputButton.Control name="password" id="password" placeholder="Digite sua Senha" type={showPass ? "text" : "password"}/>
+            </InputButton.Root>
+
               <button
                 type="button"
                 onClick={() => setShowPass(!showPass)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 hover:text-black"
               >
-                {showPass ? "Ocultar" : "Mostrar"}
+                {showPass ? 
+                  <Eye className="h-5 w-5 text-zinc-500" /> :
+                  <EyeOff className="h-5 w-5 text-zinc-500"/>
+                }
               </button>
             </div>
           </div>
-          <div className={`${error ? "block" : "hidden"} mt-3`}>
+          <div className={`${error !== null ? "block" : "hidden"} mt-3`}>
             <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
-              E-mail ou senha incorretos.
+              {error}
             </p>
           </div>
           {/* Botão */}
