@@ -4,7 +4,7 @@ import "./globals.css";
 import ReduxProvider from "@/redux/Provider";
 import { useSelector } from "react-redux";
 import { redirect } from "next/navigation";
-
+import authUser from "@/src/hooks/userAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,20 +26,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        
-          <ReduxProvider>
-            <main>
-              {children}
-            </main>
-          </ReduxProvider>
-
-        
+      <body className={`antialiased`}>
+        <ReduxProvider>
+          <main>{children}</main>
+        </ReduxProvider>
       </body>
     </html>
   );
