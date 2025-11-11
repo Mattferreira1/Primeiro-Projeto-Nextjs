@@ -1,6 +1,7 @@
 import React from 'react'
 import { NavButton } from './NavButton'
 import { ChartColumn, Cog, Home, IdCardLanyard, LogOut, UserCircle2, Users } from 'lucide-react'
+import { redirect } from 'next/navigation'
 
 
 const Sidebar = () => {
@@ -10,13 +11,14 @@ const Sidebar = () => {
           <h1 className="text-xl font-semibold text-zinc-700 pl-4">Gerencia Fácil</h1>
 
           <nav className="w-full space-y-2">
-              <NavButton icon={Home} title="Home" linkTo="empresa/2/funcionarios"/>
-              <NavButton icon={ChartColumn} title="Dashboard" linkTo="/settings"/>
-              <NavButton icon={Users} title="Setores" linkTo="/settings"/>
-              <NavButton icon={IdCardLanyard} title="Funcionários" linkTo="/settings"/>
-              <NavButton icon={Cog} title="Configurações" linkTo="empresa/2/funcionarios"/>
+              <NavButton icon={Home} title="Home" />
+              <NavButton icon={ChartColumn} title="Dashboard" />
+              <NavButton icon={Users} title="Setores"/>
+              <NavButton icon={IdCardLanyard} title="Funcionários"/>
+              <NavButton icon={Cog} title="Configurações" />
           </nav>
         </div>
+  <div></div>
         
         <nav className="">
             <div className="grid grid-cols-[1fr_minmax(7.5rem,_17.5rem)_1rem] gap-2 items-center">
@@ -26,8 +28,8 @@ const Sidebar = () => {
                 <span className="block text-sm text-zinc-700">Matheus</span>
                 <span className="text-xs text-zinc-500 truncate">Matheus@gmail.comdsdsdsdsdsdsdsd</span>
               </span>
-              <LogOut className="h-5 ml-0
-               w-5 text-zinc-500"/>
+              <LogOut className="h-4 ml-0
+               w-4 text-zinc-500" onClick={()=>redirect("/login")}/>
             </div>
         </nav>                
       </aside>
