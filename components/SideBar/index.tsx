@@ -10,11 +10,11 @@ const Sidebar = () => {
           <h1 className="text-xl font-semibold text-zinc-700 pl-4">Gerencia Fácil</h1>
 
           <nav className="w-full space-y-2">
-              <NavButton icon={Home} title="Home" linkTo="empresa/2/funcionarios"/>
-              <NavButton icon={ChartColumn} title="Dashboard" linkTo="/settings"/>
-              <NavButton icon={Users} title="Setores" linkTo="/settings"/>
-              <NavButton icon={IdCardLanyard} title="Funcionários" linkTo="/settings"/>
-              <NavButton icon={Cog} title="Configurações" linkTo="empresa/2/funcionarios"/>
+              <NavButton icon={Home} title="Home" />
+              <NavButton icon={ChartColumn} title="Dashboard" />
+              <NavButton icon={Users} title="Setores" />
+              <NavButton icon={IdCardLanyard} title="Funcionários" />
+              <NavButton icon={Cog} title="Configurações" />
           </nav>
         </div>
         

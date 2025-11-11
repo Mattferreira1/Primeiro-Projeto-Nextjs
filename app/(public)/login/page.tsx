@@ -28,7 +28,6 @@ const Login = () => {
       setError("Email ou senha faltando.")
       return
     }
-    console.log(123);
     
     const q = query(
       collectionGroup(db, "Funcionarios"),
@@ -121,11 +120,10 @@ const Login = () => {
           {/* Botão */}
           <button
             type="submit"
-            className="w-full py-2 px-4 rounded-lg bg-black text-white font-medium hover:bg-gray-900 transition cursor-pointer"
+            className="w-full py-2 px-4 rounded-lg bg-slate-700 text-white font-medium hover:bg-slate-900 transition cursor-pointer mt-6"
           >
             Entrar
           </button>
-          <Button variant="outline" className="bg-transparent cursor-pointer" onClick={()=> redirect("/register")}>Criar conta</Button>
         </form>
       </div>
     </main>
