@@ -4,14 +4,19 @@ import { Button } from "@/components/ui/button"
 import {  collectionGroup, getDoc, getDocs, query, where } from "firebase/firestore";
 import { ChangeEvent, useState } from "react";
 import { redirect } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { userLogin } from "@/redux/User/userSlice";
-import { CurrentUser } from "@/src/types/types";
+import { Empresa, Usuario } from "@/src/types/types";
 import * as InputButton from "@/components/InputButton/Index"
 import { AtSign, Eye, EyeOff, Shield } from "lucide-react";
 
 
-
+type LoginResponse={
+  data:{
+    status:number
+    empresa?:Empresa
+    user?: Usuario,
+    error?: string
+  }
+}
 
 
 const Login = () => {
@@ -20,43 +25,67 @@ const Login = () => {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState<string| null>(null);
 
-  const dispatch = useDispatch();
-  async function autenticate(e: any) {
+
+  async function authenticate(e: any) {
     e.preventDefault();
 
     if(!email && !password){
       setError("Email ou senha faltando.")
       return
     }
+    const response = await fetch("api/emplooyees/auth",{
+      method:"POST",
+      body:JSON.stringify({
+        email:email,
+        senha:password
+      })
+    })
+
+    const {data} = await response.json() as LoginResponse
     
-    const q = query(
-      collectionGroup(db, "Funcionarios"),
-      where("email", "==", email),
-      where("senha", "==", password)
-    );
-    const snapshot = await getDocs(q);
-    console.log(snapshot);
-    if (snapshot.empty) {
-      setError("Email ou senha incorretos, tente novamente.")
+    if(data.error){
+      setError(data.error)
       return
-    } else {
+    }else{
       setError(null)
-      const currentUser:CurrentUser={...snapshot.docs[0].data(),id:snapshot.docs[0].id } as CurrentUser
-      const funcionarioDoc = snapshot.docs[0];
-      const  empresaRef = funcionarioDoc.ref.parent.parent; 
-      const empresaSnap = await getDoc(empresaRef);
-      dispatch(userLogin(
-        {
-          id: `${currentUser.id}`,
-          email:`${currentUser.email}`,
-          password:`${currentUser.senha}`
-      }
-    ))
-    // const queryUser= query(collection(db, "empresas"),where("email"))
-    // const snapshot= getDocs(queryUser)
-      redirect(`/empresa/${empresaSnap.id}`)
+      localStorage.setItem("user", JSON.stringify(data.user));
+      redirect(`/empresa/${data.empresa!.id}`)
+
     }
-  }
+    ///////////////////
+
+
+
+    // const q = query(
+    //   collectionGroup(db, "Funcionarios"),
+    //   where("email", "==", email),
+    //   where("senha", "==", password)
+    // );
+    // const snapshot = await getDocs(q);
+    // if (snapshot.empty) {
+    //   setError("Email ou senha incorretos, tente novamente.")
+    //   return
+    // } else {
+    //   setError(null)
+    //   const currentUser:Usuario={...snapshot.docs[0].data(),id:snapshot.docs[0].id } as Usuario
+    //   const funcionarioDoc = snapshot.docs[0];
+    //   const  empresaRef:any = funcionarioDoc.ref.parent.parent; 
+    //   const empresaSnap = await getDoc(empresaRef);
+    //   const empresa:Empresa = empresaSnap.data() as Empresa
+      
+      
+    //   context?.addEmpresa(empresa)
+    //   dispatch(userLogin(
+    //     {
+    //       id: `${currentUser.id}`,
+    //       email:`${currentUser.email}`,
+    //       password:`${currentUser.senha}`
+    //   }
+    // ))
+
+    //   redirect(`/empresa/${empresaSnap.id}`)
+    // }
+}
   
   return (
     <main className="w-full h-screen flex items-center justify-center bg-white">
@@ -65,7 +94,7 @@ const Login = () => {
           Login 
         </h1>
 
-        <form onSubmit={autenticate} className="flex flex-col gap-4">
+        <form onSubmit={authenticate} className="flex flex-col gap-4">
           {/* Email */}
           <div>
             <label

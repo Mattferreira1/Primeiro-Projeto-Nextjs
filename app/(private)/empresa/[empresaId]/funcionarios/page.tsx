@@ -1,38 +1,40 @@
 "use client"
 import FuncionariosList from '@/components/FuncionariosList'
-import { db } from '@/src/services/db'
-import { Funcionarios } from '@/src/types/types'
-import { collection, getDocs } from 'firebase/firestore'
+
+import type { Funcionario } from '@/src/types/types'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
-type Props = {
-
-}
-
-const Funcionarios = (props: Props) => {
-const [ListaFuncionarios, setListaFuncionarios]= useState<Funcionarios[] | null>()
+const Funcionarios = () => {
+const [ListaFuncionarios, setListaFuncionarios]= useState<Funcionario[] | null>()
   const {empresaId} = useParams()
+  async function fetchUser(){
 
-  async function initial(){
-    const coll = collection(db, "empresas", `${empresaId}`,"Funcionarios")
-    const snapshot = await getDocs(coll)
-    const lista = snapshot.docs.map((doc)=>({...doc.data(),id:doc.id})) as Funcionarios[]
+    const res= await fetch(`/api/emplooyees/${empresaId}`,{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify({
+      //   "name": "matheus"
+      // })
+    })
+    
 
-    setListaFuncionarios(lista)
+    const data:Funcionario[] = await res.json()
+    
+    setListaFuncionarios(data)
   }
   
   useEffect(()=>{
-    
-    initial()
-    console.log(ListaFuncionarios);
+    fetchUser()
   },[ ])
 
   return (
     <main className='pt-4 px-8 h-screen max-w-5xl mx-auto'>
         
           <h1 className='font-semibold text-xl mb-2'>Lista de Funcionários</h1>
-          <FuncionariosList lista={ListaFuncionarios as Funcionarios[]}/>
+          <FuncionariosList lista={ListaFuncionarios as Funcionario[]}/>
         
     </main>
   )

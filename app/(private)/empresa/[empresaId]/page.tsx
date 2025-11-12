@@ -1,27 +1,23 @@
-// Defina este arquivo como: app/empresa/[empresaId]/page.tsx
-"use client"
 
+"use client"
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { doc, getDoc } from 'firebase/firestore'
-import { db } from '@/src/services/db' // Verifique se o caminho está correto
-import { Empresa } from '@/src/types/types' // Verifique se o caminho está correto
-// Importe o dashboard
-import { Loader2 } from 'lucide-react' // (Opcional) Para um ícone de loading
+import { db } from '@/src/services/db'
+import { Empresa } from '@/src/types/types'
+import { Loader2 } from 'lucide-react' 
 import DashboardEmpresa from '@/components/DashboradEmpresa'
-// Componente da Página Dinâmica
-export default function PaginaDashboardEmpresa() {
-  const { empresaId } = useParams() // Pega o [empresaId] da URL
 
-  // Estados para controlar o carregamento e os dados
+export default function PaginaDashboardEmpresa() {
+  const { empresaId } = useParams() 
+
   const [currentEmpresa, setCurrentEmpresa] = useState<Empresa | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
   useEffect(() => {
-    // A função que você criou, agora dentro do useEffect
+
     async function getEmpresa() {
-      // Garante que o ID é uma string (useParams pode retornar string | string[])
+      
       const id = Array.isArray(empresaId) ? empresaId[0] : empresaId
 
       if (!id) {
@@ -35,18 +31,14 @@ export default function PaginaDashboardEmpresa() {
         const querySnapshot = await getDoc(empresaRef)
         
         if (querySnapshot.exists()) {
-          const data = {...querySnapshot.data(), id:querySnapshot.id}
+          const data = {...querySnapshot.data(), id:querySnapshot.id} as Empresa
           
-          
-          // --- CORREÇÃO APLICADA AQUI ---
-          // O dado vindo do Firestore é uma string (ex: "2025-11-04").
-          // Convertemos para um objeto Date.
+        
           const empresaData: Empresa = {
             ...data,
-            dataAbertura: new Date(data.dataAbertura), // <-- MUDANÇA
+            dataAbertura: new Date(data.dataAbertura),
           } as Empresa
 
-          console.log(empresaData)
           setCurrentEmpresa(empresaData)
         } else {
           console.log("Nenhum documento encontrado!")
@@ -54,7 +46,7 @@ export default function PaginaDashboardEmpresa() {
           setCurrentEmpresa(null)
         }
 
-      } catch (err: any) { // Captura o erro para depuração
+      } catch (err: any) { 
         console.error("Erro ao buscar empresa:", err)
         setError(`Ocorreu um erro: ${err.message}`)
       } finally {
@@ -64,12 +56,9 @@ export default function PaginaDashboardEmpresa() {
 
     getEmpresa()
     
-    // O useEffect deve rodar novamente se o empresaId mudar
+   
   }, [empresaId]) 
 
-  // --- Renderização Condicional ---
-
-  // 1. Estado de Carregamento
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -79,7 +68,6 @@ export default function PaginaDashboardEmpresa() {
     )
   }
 
-  // 2. Estado de Erro ou Não Encontrado
   if (error || !currentEmpresa) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
