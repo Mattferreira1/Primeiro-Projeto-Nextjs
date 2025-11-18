@@ -15,7 +15,10 @@ export async function POST(request:Request){
         
         if(snapShot.empty){
             return NextResponse.json({
-            error:"Email ou senha incorretos, tente novamente."
+            data:{
+                status:500,
+                error:"Email ou senha incorretos, tente novamente."
+            }
             })
         }
         const currentUser={...snapShot.docs[0].data(),id:snapShot.docs[0].id } as Usuario
@@ -39,8 +42,10 @@ export async function POST(request:Request){
     }
     catch(e){
         return NextResponse.json({
-            error:e,
-            status:500
+            data:{
+                error:e,
+                status:500
+            }
         })
     }
 }

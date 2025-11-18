@@ -6,9 +6,6 @@ import { NextResponse } from "next/server";
 export async function GET(request:Request, context:any){
     const {id} = await context.params
     
-    // const body= await request.json()
-    // console.log(body.name);
-    
     try{
         const coll = collection(db, "empresas", `${id}`,"Funcionarios")
         const snapshot = await getDocs(coll)
@@ -28,7 +25,6 @@ export async function POST(request:Request){
     const body = await request
     console.log(body);
     
-    // const FuncionariosCollectionRef = collection(db, "empresas", `${body.empresaId}`)
 }
 
 

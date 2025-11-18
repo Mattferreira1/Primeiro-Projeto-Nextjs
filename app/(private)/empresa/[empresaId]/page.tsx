@@ -11,7 +11,7 @@ import DashboardEmpresa from '@/components/DashboradEmpresa'
 export default function PaginaDashboardEmpresa() {
   const { empresaId } = useParams() 
 
-  const [currentEmpresa, setCurrentEmpresa] = useState<Empresa | null>(null)
+  // const [currentEmpresa, setCurrentEmpresa] = useState<Empresa | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   useEffect(() => {
@@ -26,32 +26,32 @@ export default function PaginaDashboardEmpresa() {
         return
       }
       
-      try {
-        const empresaRef = doc(db, "empresas", id)
-        const querySnapshot = await getDoc(empresaRef)
+      // try {
+      //   const empresaRef = doc(db, "empresas", id)
+      //   const querySnapshot = await getDoc(empresaRef)
         
-        if (querySnapshot.exists()) {
-          const data = {...querySnapshot.data(), id:querySnapshot.id} as Empresa
+      //   if (querySnapshot.exists()) {
+      //     const data = {...querySnapshot.data(), id:querySnapshot.id} as Empresa
           
         
-          const empresaData: Empresa = {
-            ...data,
-            dataAbertura: new Date(data.dataAbertura),
-          } as Empresa
+      //     const empresaData: Empresa = {
+      //       ...data,
+      //       dataAbertura: new Date(data.dataAbertura),
+      //     } as Empresa
 
-          setCurrentEmpresa(empresaData)
-        } else {
-          console.log("Nenhum documento encontrado!")
-          setError("Empresa não encontrada.")
-          setCurrentEmpresa(null)
-        }
+      //     setCurrentEmpresa(empresaData)
+      //   } else {
+      //     console.log("Nenhum documento encontrado!")
+      //     setError("Empresa não encontrada.")
+      //     setCurrentEmpresa(null)
+      //   }
 
-      } catch (err: any) { 
-        console.error("Erro ao buscar empresa:", err)
-        setError(`Ocorreu um erro: ${err.message}`)
-      } finally {
-        setIsLoading(false)
-      }
+      // } catch (err: any) { 
+      //   console.error("Erro ao buscar empresa:", err)
+      //   setError(`Ocorreu um erro: ${err.message}`)
+      // } finally {
+      //   setIsLoading(false)
+      // }
     }
 
     getEmpresa()

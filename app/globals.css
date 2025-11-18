@@ -2,6 +2,12 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+
+@theme{
+  --widht-170rem: 42.5 rem;
+
+  --color-matheus: #888888;
+}
 /* *{
   font-family: roboto, sans-serif;
 } */

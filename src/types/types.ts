@@ -95,7 +95,7 @@ export type DadosOperacionais = {
 }
 
 export type Empresa = {
-  id: string
+  id?: string
   razaoSocial: string
   nomeComercial: string
   dataAbertura: Date

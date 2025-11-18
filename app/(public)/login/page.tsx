@@ -2,11 +2,12 @@
 import {  db } from "@/src/services/db";
 import { Button } from "@/components/ui/button"
 import {  collectionGroup, getDoc, getDocs, query, where } from "firebase/firestore";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { redirect } from "next/navigation";
 import { Empresa, Usuario } from "@/src/types/types";
-import * as InputButton from "@/components/InputButton/Index"
+import * as InputField from "@/components/InputField/Index"
 import { AtSign, Eye, EyeOff, Shield } from "lucide-react";
+import { EmpresaContext } from "@/src/contexts/EmpresaContext";
 
 
 type LoginResponse={
@@ -24,7 +25,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState<string| null>(null);
-
+  const empresaContext = useContext(EmpresaContext)
 
   async function authenticate(e: any) {
     e.preventDefault();
@@ -49,6 +50,7 @@ const Login = () => {
     }else{
       setError(null)
       localStorage.setItem("user", JSON.stringify(data.user));
+      empresaContext?.setEmpresa(data.empresa!)
       redirect(`/empresa/${data.empresa!.id}`)
 
     }
@@ -99,17 +101,17 @@ const Login = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-slate-900 mb-1"
             >
               E-mail
             </label>
             
-            <InputButton.Root
+            <InputField.Root
               onChange={(e:ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             >
-              <InputButton.Prefix icon={AtSign}/>
-              <InputButton.Control name="email" id="email" placeholder="Digite seu email" type="email"/>
-            </InputButton.Root>
+              <InputField.Prefix icon={AtSign}/>
+              <InputField.Control name="email" id="email" placeholder="Digite seu email" type="email"/>
+            </InputField.Root>
 
           </div>
 
@@ -117,17 +119,17 @@ const Login = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-slate-900 mb-1"
             >
               Senha
             </label>
             <div className="relative">
-               <InputButton.Root
+               <InputField.Root
               onChange={(e:ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
             >
-              <InputButton.Prefix icon={Shield}/>
-              <InputButton.Control name="password" id="password" placeholder="Digite sua Senha" type={showPass ? "text" : "password"}/>
-            </InputButton.Root>
+              <InputField.Prefix icon={Shield}/>
+              <InputField.Control name="password" id="password" placeholder="Digite sua Senha" type={showPass ? "text" : "password"}/>
+            </InputField.Root>
 
               <button
                 type="button"

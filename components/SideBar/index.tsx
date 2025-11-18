@@ -3,8 +3,10 @@ import React, { useContext } from 'react'
 import { NavButton } from './NavButton'
 import { ChartColumn, Cog, Home, IdCardLanyard, LogOut, UserCircle2, Users } from 'lucide-react'
 import { redirect } from 'next/navigation'
+import { EmpresaContext } from '@/src/contexts/EmpresaContext'
 
 const Sidebar = () => {
+  const empresa = useContext(EmpresaContext)
   const NavButtons=[
     {
       icon:Home,
@@ -62,13 +64,6 @@ const Sidebar = () => {
     }
 
   ]
-
-  // const localEmpresa = localStorage.getItem("empresa")
-  // console.log(localEmpresa);
-  
-  // const currentEmpresa= JSON.parse(localEmpresa!)
-
-
   
   
   return (
@@ -80,7 +75,7 @@ const Sidebar = () => {
             {
               NavButtons.map((item,index)=>(
                 <NavButton icon={item.icon} title={item.title}  links={item.linklista} key={index} 
-                // idEmpresa={currentEmpresa.id}
+                idEmpresa={empresa?.id}
                 />
               ))
             }
